@@ -37,8 +37,8 @@ class Book extends ActiveRecord
         return [
             'id',
             'title',
-            'autor' => function () {
-                return $this->autor ? ['id' => $this->autor->id, 'name' => $this->autor->name] : null;
+            'autor_id' => function () {
+                return $this->autor_id ?: null;
             },
             'pages',
             'language',
