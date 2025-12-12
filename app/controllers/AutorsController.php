@@ -50,7 +50,8 @@ class AutorsController extends ActiveController
         if (!$obAutor) {
             throw new NotFoundHttpException(sprintf('Автор с id:%s не найден', $id));
         }
-        $obAutor->load(Yii::$app->request->getBodyParams(), '');
+        self::checkParams($arParams = Yii::$app->request->getBodyParams());
+        $obAutor->load($arParams, '');
         if (!$obAutor->save()) {
             throw new BadRequestHttpException('Ошибка при обновлении автора');
         }
@@ -60,6 +61,18 @@ class AutorsController extends ActiveController
     public function actionDelete($id)
     {
         throw new NotFoundHttpException('Удаление автора запрещено');
+
+    }
+
+    public static function checkParams(array $arParams)
+    {
+        if (isset($arParams['birth_year']) && !is_numeric($arParams['birth_year'])) {
+            throw new BadRequestHttpException('Год рождения должен быть числом');
+        }
+
+        if ($arParams['birth_year'] > date("Y")) {
+            throw new BadRequestHttpException('Дата рождения не может быть больше текущей');
+        }
 
     }
 }
